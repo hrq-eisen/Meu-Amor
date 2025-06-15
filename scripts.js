@@ -1,29 +1,22 @@
-document.getElementById('card').addEventListener('click', () => {
-    const heartContainer = document.getElementById('hearts');
+function mostrarMensagem() {
+  const msg = document.getElementById("mensagem");
+  msg.style.display = "block";
+}
 
-    // Limpa corações antigos
-    heartContainer.innerHTML = '';
+// Criar corações flutuantes
+const heartsContainer = document.querySelector(".hearts");
 
-    for (let i = 0; i < 50; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
+function criarCoracao() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerText = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = 4 + Math.random() * 3 + "s";
+  heartsContainer.appendChild(heart);
 
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
-        const size = Math.random() * 20 + 10; // tamanho dos corações
-        const duration = Math.random() * 2 + 1; // duração da animação
+  setTimeout(() => {
+    heart.remove();
+  }, 7000);
+}
 
-        heart.style.left = `${x}px`;
-        heart.style.top = `${y}px`;
-        heart.style.width = `${size}px`;
-        heart.style.height = `${size}px`;
-        heart.style.animation = `explode ${duration}s forwards`;
-
-        heartContainer.appendChild(heart);
-
-        // Remove o coração do DOM após a animação
-        setTimeout(() => {
-            heart.remove();
-        }, duration * 1000);
-    }
-});
+setInterval(criarCoracao, 300);
