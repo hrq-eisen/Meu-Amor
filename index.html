@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meu Amor ❤️</title>
+  <title>Carta de Amor 💌</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="heart-container"></div>
-
-  <div class="content">
-    <h1>Para o Amor da Minha Vida 💖</h1>
-    <p>Você ilumina meus dias com seu sorriso e enche meu coração de amor.</p>
-    <button onclick="mostrarMensagem()">Clique para uma Surpresa 💌</button>
-    <div id="mensagem" class="mensagem">Te amo hoje, amanhã e para sempre! 💕</div>
+  <div class="container">
+    <div class="envelope" onclick="abrirCarta()">
+      💌
+    </div>
+    <div id="mensagem" class="mensagem">Você é a razão do meu sorriso. Te amo! ❤️</div>
   </div>
+
+  <canvas id="fogosCanvas"></canvas>
 
   <script src="script.js"></script>
 </body>
