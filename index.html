@@ -1,21 +1,190 @@
-<!DOCTYPE html>
+<!DOCTYPE html>Add commentMore actions
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carta de Amor 💌</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta Romântica 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to top right, #ffdde1, #ee9ca7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .envelope {
+      font-size: 5rem;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+      transition: transform 0.3s;
+    }
+
+    .envelope:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .mensagem {
+      margin-top: 20px;
+      font-size: 2rem;
+      color: #b30059;
+      font-family: 'Great Vibes', cursive;
+      display: none;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    canvas#fogosCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      color: red;
+      animation: subir 4s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes subir {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="envelope" onclick="abrirCarta()">
-      💌
-    </div>
-    <div id="mensagem" class="mensagem">Você é a razão do meu sorriso. Te amo! ❤️</div>
-  </div>
-
   <canvas id="fogosCanvas"></canvas>
 
-  <script src="script.js"></script>
+  <audio id="musica" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_2266870c37.mp3?filename=romantic-piano-ambient-110542.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="envelope" onclick="abrirCarta()">💌</div>
+    <div id="mensagem" class="mensagem"></div>
+  </div>
+
+  <script>
+    const frases = [
+      "Você fez minha vida florescer em cores que eu nunca imaginei.",
+      "Seu olhar é o meu lugar favorito no mundo.",
+      "Desde que você chegou, tudo tem um brilho diferente.",
+      "Seu riso acende estrelas no meu céu.",
+      "A presença que acalma, o abraço que completa."
+    ];
+
+    let fraseAtual = 0;
+
+    function abrirCarta() {
+      const mensagem = document.getElementById('mensagem');
+      const audio = document.getElementById('musica');
+      mensagem.innerText = frases[fraseAtual];
+      mensagem.style.display = 'block';
+
+      dispararFogos();
+      espalharCoracoes();
+      audio.play();
+
+      fraseAtual = (fraseAtual + 1) % frases.length;
+    }
+
+    // Fogos
+    const canvas = document.getElementById('fogosCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particulas = [];
+
+    function criarParticulas(x, y) {
+      for (let i = 0; i < 40; i++) {
+        particulas.push({
+          x,
+          y,
+          radius: Math.random() * 4 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+          speedX: (Math.random() - 0.5) * 6,
+          speedY: (Math.random() - 0.5) * 6,
+          alpha: 1
+        });
+      }
+    }
+
+    function animarFogos() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particulas.forEach((p, index) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.alpha -= 0.01;
+
+        if (p.alpha <= 0) {
+          particulas.splice(index, 1);
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+      requestAnimationFrame(animarFogos);
+    }
+
+    function dispararFogos() {
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight / 2;
+      criarParticulas(x, y);
+    }
+
+    animarFogos();
+
+    // Corações
+    function espalharCoracoes() {
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerText = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = Math.random() * 80 + 20 + 'vh';
+        heart.style.fontSize = Math.random() * 20 + 16 + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }
+    }
+  </script>
 </body>
 </html>
